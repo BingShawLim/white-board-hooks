@@ -22,13 +22,23 @@ function Paint() {
             setColors(data.colors.map(color = color.hex.value))
             setActiveColor(data.colors[0].hex.value)
         })
-
     }
 
+    useEffect(getColors, [])
+
     return (
-        <div>
-            
-        </div>
+        <header style={{borderTop: `10px solid $activeColor`}}>
+            <div className='app'>
+                <Name />
+            </div>
+            <div style={{marginTop: 10}}>
+                <ColorPicker
+                    colors={colors}
+                    activeColor={activeColor}
+                    setActiveColor={setActiveColor}
+                />
+            </div>
+        </header>
     )
 }
 
