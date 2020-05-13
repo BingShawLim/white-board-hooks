@@ -5,16 +5,15 @@ function WindowSize() {
     const [visible, setVisible] = useState(false)
     useEffect(()=> {
         let timeoutId
-        
         const handleResize = () => {
             setWindowSize([window.innerWidth, window.innerHeight])
             setVisible(true)
             clearTimeout(timeoutId)
-            setTimeout(() => {setVisible(false)}, 700)
+            timeoutId = setTimeout(() => {setVisible(false)}, 700)
         }
 
         window.addEventListener('resize', handleResize)
-        return () => window.removeEventListener('resize', handleResize )
+        return () => window.removeEventListener('resize', handleResize)
     }, [])
     return (
         <div className={`window-size ${visible? '' : 'hidden'}`}>

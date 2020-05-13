@@ -3,6 +3,7 @@ import randomColor from 'randomcolor'
 
 import Name from './Name'
 import ColorPicker from './ColorPicker'
+import WindowSize from './WindowSize'
 
 function Paint() {
     const [colors, setColors] = useState([])
@@ -19,7 +20,7 @@ function Paint() {
         fetch('`https://www.thecolorapi.com/scheme?hex=${baseColor}&mode=${randomMode}`')
         .then(response => response.json())
         .then(data => {
-            setColors(data.colors.map(color = color.hex.value))
+            setColors(data.colors.map(color => color.hex.value))
             setActiveColor(data.colors[0].hex.value)
         })
     }
@@ -27,18 +28,21 @@ function Paint() {
     useEffect(getColors, [])
 
     return (
-        <header style={{borderTop: `10px solid $activeColor`}}>
-            <div className='app'>
-                <Name />
-            </div>
-            <div style={{marginTop: 10}}>
-                <ColorPicker
-                    colors={colors}
-                    activeColor={activeColor}
-                    setActiveColor={setActiveColor}
-                />
-            </div>
-        </header>
+        <div className="app">
+            <header style={{borderTop: `10px solid $activeColor`}}>
+                <div className='app'>
+                    <Name />
+                </div>
+                <div style={{marginTop: 10}}>
+                    <ColorPicker
+                        colors={colors}
+                        activeColor={activeColor}
+                        setActiveColor={setActiveColor}
+                    />
+                </div>
+            </header>
+            <WindowSize />
+        </div>
     )
 }
 
