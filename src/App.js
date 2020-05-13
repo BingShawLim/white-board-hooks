@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import randomColor from 'randomcolor'
+import React from 'react';
 
 import Name from './components/Name'
 
