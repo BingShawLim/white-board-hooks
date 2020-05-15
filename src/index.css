@@ -1,6 +1,6 @@
 html {
   box-sizing: border-box;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 *,
 *:before,
@@ -58,7 +58,7 @@ header > div {
   margin-left: 10px;
 }
 
-.button-refresh-colors {
+.button-refresher {
   border: 0;
   background: none;
   cursor: pointer;
