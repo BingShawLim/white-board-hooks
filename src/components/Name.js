@@ -7,6 +7,7 @@ export default React.memo(
         return (
             <label className="header-name">
                 <input 
+                id="name"
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}

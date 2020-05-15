@@ -27,8 +27,9 @@ function Paint() {
     const saveImg = useCallback(
         () => {
             const canvas = document.getElementById('canvas')
-            const dataURL = canvas.toDataURL('image/jpeg', 1.0);
-            console.log(dataURL)
+            const dataURI = canvas.toDataURL('image/jpeg')
+            const name = document.getElementById('name').value
+            console.log(dataURI, `${name || "untitled"}.jpeg`);
         },
         [])
 
