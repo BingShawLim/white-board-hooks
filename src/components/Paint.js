@@ -6,29 +6,31 @@ import ColorPicker from './ColorPicker'
 import useWindowSize from './WindowSize'
 import Canvas from './Canvas'
 import Refresher from './Refresher'
-
+import SaveDraw from './SaveDraw'
 
 function Paint() {
     const [colors, setColors] = useState([])
     const [activeColor, setActiveColor] = useState(null)
 
-    const getColors =useCallback( () => {
-        const randomMode = () => {
-            const colorModes = ['monochrome', 'monochrome-dark', 'monochrome-light', 'analogic', 'complement', 'analogic-complement', 'triad', 'quad']
-            const doRandom = Math.floor(Math.random() * colorModes.length)
-            return colorModes[doRandom]
-        }
-
-        const baseColor = randomColor().slice(1);
+    const getColors = useCallback( () => {
+        const randomMode = () => { return ['monochrome', 'monochrome-dark', 'monochrome-light', 'analogic', 'complement', 'analogic-complement', 'triad', 'quad'][Math.floor(Math.random() * 8)]}
+        const baseColor = randomColor().slice(1)
         const useMode = randomMode()
-
         fetch(`https://www.thecolorapi.com/scheme?hex=${baseColor}&mode=${useMode}`)
         .then(response => response.json())
         .then(data => {
             setColors(data.colors.map(color => color.hex.value))
             setActiveColor(data.colors[0].hex.value)
         })
-    }, [])
+    }, [])    
+
+    const saveImg = useCallback(
+        () => {
+            const canvas = document.getElementById('canvas')
+            const dataURL = canvas.toDataURL('image/jpeg', 1.0);
+            console.log(dataURL)
+        },
+        [])
 
     useEffect(getColors, [])
     const headerRef = useRef({offsetHeight: 0})
@@ -54,13 +56,18 @@ function Paint() {
                         setActiveColor={setActiveColor}
                     />
                     <Refresher cb={getColors}/>
+                    <SaveDraw 
+                    cb={saveImg}
+                    />
                 </div>
             </header>
             {activeColor &&(
+                <div style={{background: "black"}} >
                 <Canvas 
                     color={activeColor}
                     height={window.innerHeight - headerRef.current.offsetHeight}
                 />
+                </div>
             )}
             <div className={`window-size ${visible? '' : 'hidden'}`}>
                 {windowWidth} x {windowHeight}

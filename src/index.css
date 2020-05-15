@@ -58,7 +58,18 @@ header > div {
   margin-left: 10px;
 }
 
-.button-refresher {
+.button-refresh {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 2rem;
+}
+
+.div-save {
+  display: flex;
+  border-bottom: 1px solid black;
+}
+.button-save {
   border: 0;
   background: none;
   cursor: pointer;

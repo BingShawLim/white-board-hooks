@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef,} from 'react'
 import useWindowSize from './WindowSize'
+import SaveDraw from './SaveDraw'
 
 export default function Canvas(props) {
   const [drawing, setDrawing] = useState(false)
@@ -10,7 +11,7 @@ export default function Canvas(props) {
   const ctx = useRef()
 
   useEffect(()=>{
-    ctx.current = canvasRef.current.getContext('2d')
+    ctx.current = canvasRef.current.getContext('2d');
   },[])
 
   const [windowWidth, windowHeight] = useWindowSize(()=>{
@@ -53,6 +54,7 @@ export default function Canvas(props) {
   }
 
   return <canvas
+      id = "canvas"
       ref={canvasRef}
       width={props.width || width}
       height={props.height || height}
