@@ -1,114 +1,139 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+import useWindowSize from './WindowSize'
 
-export default class Canvas extends React.Component {
-  constructor(props) {
-    super(props)
-    this.canvasRef = React.createRef()
-    this.handleMouseMove = this.handleMouseMove.bind(this)
-    this.handleResize = this.handleResize.bind(this)
-    this.startDrawing = this.startDrawing.bind(this)
-    this.stopDrawing = this.stopDrawing.bind(this)
-    this.state = {
-      drawing: false,
-      width: window.innerWidth
-    }
-  }
-  componentDidMount() {
-    this.ctx = this.canvasRef.current.getContext('2d')
-    window.addEventListener('resize', this.handleResize);
-  }
-  componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize)
-  }
-  handleMouseMove(e) {
+export default function Canvas(props) {
+  const [drawing, setDrawing] = useState(false)
+  const [width, setWidth] = useState(window.innerWidth)
+  const [height, setHeight] = useState(window.innerHeight)
+
+  const canvasRef = useRef()
+  const ctx = useRef()
+
+  useEffect(()=>{
+    ctx.current = canvasRef.current.getContext('2d')
+  },[])
+
+  const [windowWidth, windowHeight] = useWindowSize(()=>{
+    setWidth(window.innerWidth)
+    setHeight(window.innerHeight)
+  })
+    
+  function handleMouseMove(e) {
     // actual coordinates
     const coords = [
-      e.clientX - this.canvasRef.current.offsetLeft,
-      e.clientY - this.canvasRef.current.offsetTop
+      e.clientX - canvasRef.current.offsetLeft,
+      e.clientY - canvasRef.current.offsetTop
     ]
-    if (this.state.drawing) { 
-      this.ctx.lineTo(...coords)
-      this.ctx.stroke()
+    if (drawing) { 
+      ctx.current.lineTo(...coords)
+      ctx.current.stroke()
     }
-    if (this.props.handleMouseMove) {
-        this.props.handleMouseMove(...coords)
+    if (props.handleMouseMove) {
+      props.handleMouseMove(...coords)
     }
   }
-  handleResize() {
-    this.setState({ width: window.innerWidth, height: window.innerHeight })
-  }
-  startDrawing(e) {
-    this.ctx.lineJoin = 'round'
-    this.ctx.lineCap = 'round'
-    this.ctx.lineWidth = 10
-    this.ctx.strokeStyle = this.props.color
-    this.ctx.beginPath();
+                
+  function startDrawing(e) {
+    ctx.current.lineJoin = 'round'
+    ctx.current.lineCap = 'round'
+    ctx.current.lineWidth = 10
+    ctx.current.strokeStyle = props.color
+    ctx.current.beginPath();
     // actual coordinates
-    this.ctx.moveTo(
-      e.clientX - this.canvasRef.current.offsetLeft,
-      e.clientY - this.canvasRef.current.offsetTop
+    ctx.current.moveTo(
+       e.clientX - canvasRef.current.offsetLeft,
+       e.clientY - canvasRef.current.offsetTop
     )
-    this.setState({ drawing: true })
+    setDrawing(true)
   }
-  stopDrawing() {
-    this.ctx.closePath()
-    this.setState({ drawing: false })
+
+  function stopDrawing() {
+    ctx.current.closePath()
+    setDrawing(false)
   }
-  render() {
-    return (
-      <React.Fragment>
-        <canvas
-          ref={this.canvasRef}
-          width={this.props.width || this.state.width}
-          height={this.props.height || this.state.height}
-          onMouseDown={this.startDrawing}
-          onMouseUp={this.stopDrawing}
-          onMouseOut={this.stopDrawing}
-          onMouseMove={this.handleMouseMove}
-        />
-      </React.Fragment>
-    )
-  }
+
+  return <canvas
+      ref={canvasRef}
+      width={props.width || width}
+      height={props.height || height}
+      onMouseDown={startDrawing}
+      onMouseUp={stopDrawing}
+      onMouseOut={stopDrawing}
+      onMouseMove={handleMouseMove}
+  />
 }
+                
 
-// import React, { useState, useEffect, useRef } from 'react'
 
-// function Canvas() {
-//     const [drawing, setDrawing] = useState(false)
-//     const [[width, height], setSize] = useState([window.innerWidth, window.innerHeight])
-//     const canvasRef = useRef(null)
-    
-//     let ctx
-
-//     useEffect(()=>{
-//         ctx = canvasRef.current.getContext('2d')
-//         window.addEventListener('resize', handleResize);
-//         return () => window.removeEventListener('resize', handleResize)
-//     },[])
-
-//     const handleMouseMove = (e) => {
-
-//         const coords = [
-//           e.clientX - canvasRef.current.offsetLeft,
-//           e.clientY - canvasRef.current.offsetTop
-//         ]
-//         if (drawing) { 
-//           ctx.lineTo(...coords)
-//           ctx.stroke()
-//         }
-//         if (handleMouseMove) {
-//             handleMouseMove(...coords)
-//         }
-//       }
-
-//     const handleResize = () => {
-//         setSize([window.innerWidth, window.innerHeight])
-//     }
-//     return (
-//         <div>
-            
-//         </div>
-//     )
-// }
-
-// export default Canvas
+                // import React from 'react'
+                
+                // export default class Canvas extends React.Component {
+                //   constructor(props) {
+                //     super(props)
+                //     this.canvasRef = React.createRef()
+                //     this.handleMouseMove = this.handleMouseMove.bind(this)
+                //     this.handleResize = this.handleResize.bind(this)
+                //     this.startDrawing = this.startDrawing.bind(this)
+                //     this.stopDrawing = this.stopDrawing.bind(this)
+                //     this.state = {
+                //       drawing: false,
+                //       width: window.innerWidth
+                //     }
+                //   }
+                //   componentDidMount() {
+                //     this.ctx = this.canvasRef.current.getContext('2d')
+                //     window.addEventListener('resize', this.handleResize);
+                //   }
+                //   componentWillUnmount() {
+                //     window.removeEventListener('resize', this.handleResize)
+                //   }
+                //   handleMouseMove(e) {
+                //     // actual coordinates
+                //     const coords = [
+                //       e.clientX - this.canvasRef.current.offsetLeft,
+                //       e.clientY - this.canvasRef.current.offsetTop
+                //     ]
+                //     if (this.state.drawing) { 
+                //       this.ctx.lineTo(...coords)
+                //       this.ctx.stroke()
+                //     }
+                //     if (this.props.handleMouseMove) {
+                //         this.props.handleMouseMove(...coords)
+                //     }
+                //   }
+                //   handleResize() {
+                //     this.setState({ width: window.innerWidth, height: window.innerHeight })
+                //   }
+                //   startDrawing(e) {
+                //     this.ctx.lineJoin = 'round'
+                //     this.ctx.lineCap = 'round'
+                //     this.ctx.lineWidth = 10
+                //     this.ctx.strokeStyle = this.props.color
+                //     this.ctx.beginPath();
+                //     // actual coordinates
+                //     this.ctx.moveTo(
+                //       e.clientX - this.canvasRef.current.offsetLeft,
+                //       e.clientY - this.canvasRef.current.offsetTop
+                //     )
+                //     this.setState({ drawing: true })
+                //   }
+                //   stopDrawing() {
+                //     this.ctx.closePath()
+                //     this.setState({ drawing: false })
+                //   }
+                //   render() {
+                //     return (
+                //       <React.Fragment>
+                //         <canvas
+                //           ref={this.canvasRef}
+                //           width={this.props.width || this.state.width}
+                //           height={this.props.height || this.state.height}
+                //           onMouseDown={this.startDrawing}
+                //           onMouseUp={this.stopDrawing}
+                //           onMouseOut={this.stopDrawing}
+                //           onMouseMove={this.handleMouseMove}
+                //         />
+                //       </React.Fragment>
+                //     )
+                //   }
+                // }
