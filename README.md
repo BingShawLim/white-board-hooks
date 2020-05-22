@@ -1,6 +1,6 @@
 # White Board
-> A painting app to practice React Hooks and HTML5 canvas.
-
+A painting app to practice React Hooks and HTML5 canvas.
+https://white-board-hooks.herokuapp.com
 ## Table of contents
 * [General info](#general-info)
 * [Screenshots](#screenshots)
